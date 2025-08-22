@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FILTRE DE LA DEMANDE</title>
+<style>
+body { font-family: Calibri, Arial, sans-serif; background: #f7f9fc; padding: 20px; }
+h1 { text-align: center; }
+.card { background: #fff; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 900px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.legend { font-weight: bold; margin-bottom: 10px; color: #2563eb; text-transform: uppercase; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+td, th { padding: 8px; border: 1px solid #ddd; text-align: left; }
+td input { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 6px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7); text-align: right; }
+td input:focus { outline: none; border-color: #2563eb; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15), inset -2px -2px 5px rgba(255,255,255,0.8), 0 0 5px rgba(37,99,235,0.5); }
+.result { font-weight: bold; color: #111; background: #f3f4f6; border-radius: 6px; padding: 4px 6px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7); text-align: right; }
+.result.recevable { background-color: #d1fae5; color: #065f46; }
+.result.non-recevable { background-color: #fee2e2; color: #b91c1c; }
+button { padding:6px 12px; border-radius:6px; border:none; background-color:#2563eb; color:#fff; cursor:pointer; }
+button:hover { background-color:#1e40af; }
+</style>
+</head>
+<body>
+
+<!-- Logo -->
+<div style="text-align:center; margin-bottom:10px;">
+  <img src="logo.png" alt="Logo" style="max-height:80px;">
+</div>
+
+<h1>FILTRE DE LA DEMANDE</h1>
+
+<section class="card">
+<div class="legend">TEST CAPACITÉ</div>
+<table>
+<tr><td>Vente journalière MIN</td><td><input id="venteMin" type="text" value="100 000"></td><td>NB de jours travaillés / mois</td><td><input id="jours" type="text" value="24"></td></tr>
+<tr><td>Vente journalière MAX</td><td><input id="venteMax" type="text" value="120 000"></td><td>Vente mensuelle</td><td class="result" id="venteMensuelle">0</td></tr>
+<tr><td>Achat MIN</td><td><input id="achatMin" type="text" value="50 000"></td><td>Fréquence d'achat / mois</td><td><input id="freqAchat" type="text" value="24"></td></tr>
+<tr><td>Achat MAX</td><td><input id="achatMax" type="text" value="60 000"></td><td>Achat mensuel</td><td class="result" id="achatMensuel">0</td></tr>
+<tr><td>Loyer activité</td><td><input id="loyer" type="text" value="50 000"></td><td>Capacité</td><td class="result" id="capacite">0</td></tr>
+<tr><td>Salaires employés</td><td><input id="salaires" type="text" value="100 000"></td><td>Échéance MAX</td><td class="result" id="echeanceMax">0</td></tr>
+<tr><td>Dépenses familiales</td><td><input id="depenses" type="text" value="500 000"></td><td></td><td></td></tr>
+<tr><td>Échéances autres banques</td><td><input id="autresBanques" type="text" value="0"></td><td>Demande de crédit</td><td class="result" id="recevabilite">-</td></tr>
+<tr><td>Autres revenus</td><td><input id="autresRevenus" type="text" value="0"></td><td></td><td></td></tr>
+</table>
+</section>
+
+<section class="card">
+<div class="legend">TEST BILAN</div>
+<table>
+<tr><td>Disponibilités en espèces</td><td><input id="dispo" type="text" value="150 000"></td><td>Crédits @Banque hafa</td><td><input id="creditsBanque" type="text" value="0"></td></tr>
+<tr><td>Banque</td><td><input id="banque" type="text" value="200 000"></td><td>Trosa @ Fournisseur</td><td><input id="fournisseur" type="text" value="50 000"></td></tr>
+<tr><td>Mobile Money</td><td><input id="mobileMoney" type="text" value="50 000"></td><td>Fonds propre</td><td class="result" id="fondsPropre">0</td></tr>
+<tr><td>Créances</td><td><input id="creances" type="text" value="100 000"></td><td>Demande de crédit</td><td class="result" id="recevabiliteBilan">-</td></tr>
+<tr><td>Stock (mason-karena)</td><td><input id="stock" type="text" value="1 200 000"></td><td></td><td></td></tr>
+<tr><td>Valorisation (fitaovana miasa)</td><td><input id="valorisation" type="text" value="0"></td><td></td><td></td></tr>
+</table>
+</section>
+
+<section class="card">
+<div class="legend">SALARIÉ (FONCTIONNAIRES / PRIVÉS)</div>
+<table>
+<tr><td>Salaire</td><td><input id="salaire" type="text" value="400 000"></td><td>Échéance</td><td><input id="echeanceSalaire" type="text" value="100 000"></td></tr>
+<tr><td>Salaire époux(se)</td><td><input id="salaireEpoux" type="text" value="0"></td><td>Échéance</td><td><input id="echeanceEpoux" type="text" value="0"></td></tr>
+<tr><td>Quotité cessible (%)</td><td><input id="quotite" type="text" value="25"></td><td>Demande de crédit</td><td class="result" id="recevabiliteSalaire">-</td></tr>
+</table>
+</section>
+
+<!-- Bouton Réinitialiser en bas -->
+<div style="text-align:center; margin-top:20px;">
+  <button id="resetBtn">Réinitialiser</button>
+</div>
+
+<script>
+function parseNumber(str){ return Number(str.replace(/\s/g,'')) || 0; }
+function formatNumber(num){ return num.toLocaleString('fr-FR'); }
+
+function calculs(){
+    // TEST CAPACITÉ
+    let venteMin = parseNumber(document.getElementById('venteMin').value);
+    let venteMax = parseNumber(document.getElementById('venteMax').value);
+    let jours = parseNumber(document.getElementById('jours').value);
+    let achatMin = parseNumber(document.getElementById('achatMin').value);
+    let achatMax = parseNumber(document.getElementById('achatMax').value);
+    let freq = parseNumber(document.getElementById('freqAchat').value);
+    let loyer = parseNumber(document.getElementById('loyer').value);
+    let salaires = parseNumber(document.getElementById('salaires').value);
+    let depenses = parseNumber(document.getElementById('depenses').value);
+    let autresBanques = parseNumber(document.getElementById('autresBanques').value);
+    let autresRevenus = parseNumber(document.getElementById('autresRevenus').value);
+
+    let venteMensuelle = ((venteMin + venteMax)/2) * jours;
+    let achatMensuel = ((achatMin + achatMax)/2) * freq;
+    let capacite = venteMensuelle - achatMensuel - loyer - salaires - (0.05*venteMensuelle) - depenses - autresBanques + autresRevenus;
+    let echeanceMax = capacite * 0.5;
+
+    document.getElementById('venteMensuelle').innerText = formatNumber(venteMensuelle);
+    document.getElementById('achatMensuel').innerText = formatNumber(achatMensuel);
+    document.getElementById('capacite').innerText = formatNumber(capacite);
+    document.getElementById('echeanceMax').innerText = formatNumber(echeanceMax);
+
+    let demandeCredit = echeanceMax > 100000 ? 'RECEVABLE' : 'REJET';
+    let recevElem = document.getElementById('recevabilite');
+    recevElem.innerText = demandeCredit;
+    recevElem.className = 'result ' + (demandeCredit==='RECEVABLE'?'recevable':'non-recevable');
+
+    // TEST BILAN
+    let dispo = parseNumber(document.getElementById('dispo').value);
+    let banque = parseNumber(document.getElementById('banque').value);
+    let mobileMoney = parseNumber(document.getElementById('mobileMoney').value);
+    let creances = parseNumber(document.getElementById('creances').value);
+    let stock = parseNumber(document.getElementById('stock').value);
+    let valorisation = parseNumber(document.getElementById('valorisation').value);
+    let creditsBanque = parseNumber(document.getElementById('creditsBanque').value);
+    let fournisseur = parseNumber(document.getElementById('fournisseur').value);
+
+    let fondsPropre = dispo + banque + mobileMoney + creances + stock + valorisation - creditsBanque - fournisseur;
+    document.getElementById('fondsPropre').innerText = formatNumber(fondsPropre);
+    let recevBilan = document.getElementById('recevabiliteBilan');
+    recevBilan.innerText = fondsPropre > 1000000 ? 'RECEVABLE':'REJET';
+    recevBilan.className = 'result ' + (fondsPropre>1000000?'recevable':'non-recevable');
+
+    // SALARIÉ
+    let salaire = parseNumber(document.getElementById('salaire').value);
+    let echeanceSalaire = parseNumber(document.getElementById('echeanceSalaire').value);
+    let salaireEpoux = parseNumber(document.getElementById('salaireEpoux').value);
+    let echeanceEpoux = parseNumber(document.getElementById('echeanceEpoux').value);
+
+    let quotite = (echeanceSalaire + echeanceEpoux) / (salaire + salaireEpoux) * 100;
+    document.getElementById('quotite').value = quotite.toFixed(2);
+
+    let salResult = document.getElementById('recevabiliteSalaire');
+    salResult.innerText = quotite < 30 ? 'RECEVABLE':'REJET';
+    salResult.className = 'result ' + (quotite < 30?'recevable':'non-recevable');
+}
+
+// Recalcul automatique
+document.querySelectorAll('input').forEach(el => { el.addEventListener('input', calculs); });
+document.addEventListener('DOMContentLoaded', calculs);
+
+// Bouton Réinitialiser : vide tous les champs et résultats
+document.getElementById('resetBtn').addEventListener('click', () => {
+    document.querySelectorAll('input').forEach(el => el.value = '');
+    document.querySelectorAll('.result').forEach(el => el.innerText = '-');
+});
+</script>
+
+</body>
+</html>
