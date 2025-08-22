@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+ <!-- Bouton Réinitialiser en bas -->
+<div style="text-align:center; margin-top:20px;">
+  <button id="resetBtn">Réinitialiser</button>
+</div> 
 <title>FILTRE DE LA DEMANDE</title>
 <style>
 body { font-family: Calibri, Arial, sans-serif; background: #f7f9fc; padding: 20px; }
@@ -65,10 +69,6 @@ button:hover { background-color:#1e40af; }
 </table>
 </section>
 
-<!-- Bouton Réinitialiser en bas -->
-<div style="text-align:center; margin-top:20px;">
-  <button id="resetBtn">Réinitialiser</button>
-</div>
 
 <script>
 function parseNumber(str){ return Number(str.replace(/\s/g,'')) || 0; }
@@ -146,6 +146,7 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
