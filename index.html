@@ -1,294 +1,761 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FILTRE DE LA DEMANDE</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-body { 
-  font-family: Calibri, Arial, sans-serif; 
-  background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=900&fit=crop');
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  padding: 20px;
-  position: relative;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FILTRE DE LA DEMANDE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Bibliothèque html2canvas pour capture d'écran -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Bibliothèque jsPDF pour génération PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Arial Narrow', Arial, sans-serif;
+      font-weight: bold;
+      background-image: url('file:///C:/Users/user/.gemini/antigravity/brain/deb36793-736a-4b50-ae2c-d8bf5516119d/uploaded_media_1770014933708.jpg');
+      background-attachment: fixed;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: -1;
-  pointer-events: none;
-}
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: -1;
+      pointer-events: none;
+    }
 
-h1 { text-align: center; color: #fff; font-size: 2.5em; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-.card { background: rgba(255, 255, 255, 0.95); border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 900px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); backdrop-filter: blur(10px); }
-.legend { font-weight: bold; margin-bottom: 10px; color: #2563eb; text-transform: uppercase; }
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-td, th { padding: 8px; border: 1px solid #ddd; text-align: left; width: 25%; }
-td input { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 6px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7); text-align: right; background-color: #87ceeb; }
-td input:focus { outline: none; border-color: #2563eb; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15), inset -2px -2px 5px rgba(255,255,255,0.8), 0 0 5px rgba(37,99,235,0.5); }
-.result { font-weight: bold; color: #111; background: #f3f4f6; border-radius: 6px; padding: 4px 6px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7); text-align: right; }
-.result.recevable { background-color: #d1fae5; color: #065f46; }
-.result.non-recevable { background-color: #fee2e2; color: #b91c1c; }
-button { padding:6px 12px; border-radius:6px; border:none; background-color:#2563eb; color:#fff; cursor:pointer; }
-button:hover { background-color:#1e40af; }
-#toggleActivite2 { background: linear-gradient(145deg, #87ceeb, #5dade2); box-shadow: 0 8px 16px rgba(0,0,0,0.2), inset -2px -2px 4px rgba(0,0,0,0.1), inset 2px 2px 4px rgba(255,255,255,0.8); transition: all 0.2s; transform: translateZ(10px); }
-#toggleActivite2:hover { box-shadow: 0 12px 20px rgba(0,0,0,0.3), inset -2px -2px 4px rgba(0,0,0,0.15), inset 2px 2px 4px rgba(255,255,255,0.9); transform: translateZ(10px) translateY(-2px); }
-#toggleActivite2:active { box-shadow: 0 4px 8px rgba(0,0,0,0.2), inset -1px -1px 2px rgba(0,0,0,0.1), inset 1px 1px 2px rgba(255,255,255,0.8); transform: translateZ(0px); }
-.message-eligibilite { display: none; margin-bottom: 20px; padding: 15px; border-radius: 8px; border-left: 5px solid; font-weight: bold; text-align: center; font-size: 1.1em; align-items: center; justify-content: center; gap: 10px; }
-.message-eligibilite.recevable { background-color: #d1fae5; border-left-color: #065f46; color: #065f46; }
-.message-eligibilite.non-recevable { background-color: #fee2e2; border-left-color: #b91c1c; color: #b91c1c; }
-.warning-triangle { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; }
-</style>
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px auto;
+      max-width: 900px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .legend {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2563eb;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    td,
+    th {
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+      width: 25%;
+    }
+
+    td input {
+      width: 100%;
+      padding: 4px 6px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: right;
+      background-color: rgba(135, 206, 235, 0.4);
+      backdrop-filter: blur(4px);
+      font-size: 0.95em;
+      box-sizing: border-box;
+      min-height: 28px;
+    }
+
+    td input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+      background-color: rgba(135, 206, 235, 0.6);
+    }
+
+    .result {
+      font-weight: bold;
+      color: #111;
+      background: rgba(243, 244, 246, 0.4);
+      border-radius: 6px;
+      padding: 4px 6px;
+      box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+      text-align: right;
+      backdrop-filter: blur(4px);
+      width: 100%;
+      box-sizing: border-box;
+      display: inline-block;
+      min-height: 28px;
+    }
+
+    .result.recevable {
+      background-color: rgba(209, 250, 229, 0.6);
+      color: #065f46;
+      backdrop-filter: blur(4px);
+    }
+
+    .result.non-recevable {
+      background-color: rgba(254, 226, 226, 0.6);
+      color: #b91c1c;
+      backdrop-filter: blur(4px);
+    }
+
+    button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      background-color: #2563eb;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+    }
+
+    #toggleActivite2 {
+      background: linear-gradient(145deg, #87ceeb, #5dade2);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px rgba(255, 255, 255, 0.8);
+      transition: all 0.2s;
+      transform: translateZ(10px);
+    }
+
+    #toggleActivite2:hover {
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.15), inset 2px 2px 4px rgba(255, 255, 255, 0.9);
+      transform: translateZ(10px) translateY(-2px);
+    }
+
+    #toggleActivite2:active {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset -1px -1px 2px rgba(0, 0, 0, 0.1), inset 1px 1px 2px rgba(255, 255, 255, 0.8);
+      transform: translateZ(0px);
+    }
+
+    .message-eligibilite {
+      display: none;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 5px solid;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.1em;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .message-eligibilite.recevable {
+      background-color: rgba(209, 250, 229, 0.6);
+      border-left-color: #065f46;
+      color: #065f46;
+      backdrop-filter: blur(8px);
+    }
+
+    .message-eligibilite.non-recevable {
+      background-color: rgba(254, 226, 226, 0.6);
+      border-left-color: #b91c1c;
+      color: #b91c1c;
+      backdrop-filter: blur(8px);
+    }
+
+    .warning-triangle {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+    }
+
+    /* Boutons d'action en bas */
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .action-buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    #resetBtn {
+      background-color: #6b7280;
+    }
+
+    #resetBtn:hover {
+      background-color: #4b5563;
+    }
+
+    #exportPdfBtn {
+      background-color: #dc2626;
+    }
+
+    #exportPdfBtn:hover {
+      background-color: #b91c1c;
+    }
+
+    /* Overlay de chargement pour l'export PDF */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+      color: white;
+      font-size: 20px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #2563eb;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- Logo -->
-<div style="text-align:center; margin-bottom:10px;">
-  <img src="logo.png" alt="Logo" style="max-height:80px;">
-</div>
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <div>Génération du PDF en cours...</div>
+  </div>
 
-<h1>FILTRE DE DEMANDE DE CRÉDIT</h1>
+  <h1>FILTRE DE DEMANDE DE CRÉDIT</h1>
 
-<section class="card">
-<div class="legend"><i class="fas fa-chart-bar"></i> TEST CAPACITÉ</div>
+  <section class="card">
+    <div class="legend"><i class="fas fa-chart-bar"></i> TEST CAPACITÉ</div>
 
-<div style="margin-bottom: 20px;">
-<h3 style="background-color: #ffeb3b; color: #000; padding: 10px; border-radius: 6px; margin: 0 0 10px 0;">ACTIVITÉ 1</h3>
-<table>
-<tr><td>Vente journalière MIN</td><td><input id="venteMin1" type="text"></td><td>NB de jours travaillés / mois</td><td><input id="jours1" type="text"></td></tr>
-<tr><td>Vente journalière MAX</td><td><input id="venteMax1" type="text"></td><td>Vente mensuelle</td><td class="result" id="venteMensuelle1">-</td></tr>
-<tr><td>Achat MIN</td><td><input id="achatMin1" type="text"></td><td>Fréquence d'achat / mois</td><td><input id="freqAchat1" type="text"></td></tr>
-<tr><td>Achat MAX</td><td><input id="achatMax1" type="text"></td><td>Achat mensuel</td><td class="result" id="achatMensuel1">-</td></tr>
-</table>
-</div>
+    <div style="margin-bottom: 20px;">
+      <h3 style="background-color: #ffeb3b; color: #000; padding: 10px; border-radius: 6px; margin: 0 0 10px 0;">
+        ACTIVITÉ 1</h3>
+      <table>
+        <tr>
+          <td>Vente journalière MIN</td>
+          <td><input id="venteMin1" type="text"></td>
+          <td>NB de jours travaillés / mois</td>
+          <td><input id="jours1" type="text"></td>
+        </tr>
+        <tr>
+          <td>Vente journalière MAX</td>
+          <td><input id="venteMax1" type="text"></td>
+          <td>Vente mensuelle</td>
+          <td>
+            <div class="result" id="venteMensuelle1">-</div>
+          </td>
+        </tr>
+        <tr>
+          <td>Achat MIN</td>
+          <td><input id="achatMin1" type="text"></td>
+          <td>Fréquence d'achat / mois</td>
+          <td><input id="freqAchat1" type="text"></td>
+        </tr>
+        <tr>
+          <td>Achat MAX</td>
+          <td><input id="achatMax1" type="text"></td>
+          <td>Achat mensuel</td>
+          <td>
+            <div class="result" id="achatMensuel1">-</div>
+          </td>
+        </tr>
+      </table>
+    </div>
 
-<div style="margin-bottom: 20px;">
-<h3 style="background-color: #ffeb3b; color: #000; padding: 10px; border-radius: 6px; margin: 0 0 10px 0; display: flex; justify-content: space-between; align-items: center;">
-  ACTIVITÉ 2
-  <button id="toggleActivite2" style="background-color: #87ceeb; color: #000; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-    <i class="fas fa-eye"></i> Masquer
-  </button>
-</h3>
-<table id="tableActivite2">
-<tr><td>Vente journalière MIN</td><td><input id="venteMin2" type="text"></td><td>NB de jours travaillés / mois</td><td><input id="jours2" type="text"></td></tr>
-<tr><td>Vente journalière MAX</td><td><input id="venteMax2" type="text"></td><td>Vente mensuelle</td><td class="result" id="venteMensuelle2">-</td></tr>
-<tr><td>Achat MIN</td><td><input id="achatMin2" type="text"></td><td>Fréquence d'achat / mois</td><td><input id="freqAchat2" type="text"></td></tr>
-<tr><td>Achat MAX</td><td><input id="achatMax2" type="text"></td><td>Achat mensuel</td><td class="result" id="achatMensuel2">-</td></tr>
-</table>
-</div>
+    <div style="margin-bottom: 20px;">
+      <h3
+        style="background-color: #ffeb3b; color: #000; padding: 10px; border-radius: 6px; margin: 0 0 10px 0; display: flex; justify-content: space-between; align-items: center;">
+        ACTIVITÉ 2
+        <button id="toggleActivite2"
+          style="background-color: #87ceeb; color: #000; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <i class="fas fa-eye"></i> Masquer
+        </button>
+      </h3>
+      <table id="tableActivite2">
+        <tr>
+          <td>Vente journalière MIN</td>
+          <td><input id="venteMin2" type="text"></td>
+          <td>NB de jours travaillés / mois</td>
+          <td><input id="jours2" type="text"></td>
+        </tr>
+        <tr>
+          <td>Vente journalière MAX</td>
+          <td><input id="venteMax2" type="text"></td>
+          <td>Vente mensuelle</td>
+          <td>
+            <div class="result" id="venteMensuelle2">-</div>
+          </td>
+        </tr>
+        <tr>
+          <td>Achat MIN</td>
+          <td><input id="achatMin2" type="text"></td>
+          <td>Fréquence d'achat / mois</td>
+          <td><input id="freqAchat2" type="text"></td>
+        </tr>
+        <tr>
+          <td>Achat MAX</td>
+          <td><input id="achatMax2" type="text"></td>
+          <td>Achat mensuel</td>
+          <td>
+            <div class="result" id="achatMensuel2">-</div>
+          </td>
+        </tr>
+      </table>
+    </div>
 
-<table>
-<tr><td>Loyer activité</td><td><input id="loyer" type="text"></td><td>Capacité</td><td class="result" id="capacite">-</td></tr>
-<tr><td>Salaires employés</td><td><input id="salaires" type="text"></td><td>Échéance MAX</td><td class="result" id="echeanceMax">-</td></tr>
-<tr><td>Dépenses familiales</td><td><input id="depenses" type="text"></td><td></td><td></td></tr>
-<tr><td>Échéances autres banques</td><td><input id="autresBanques" type="text"></td><td>Demande de crédit</td><td class="result" id="recevabilite">-</td></tr>
-<tr><td>Autres revenus</td><td><input id="autresRevenus" type="text"></td><td></td><td></td></tr>
-</table>
-</section>
+    <table>
+      <tr>
+        <td>Loyer activité</td>
+        <td><input id="loyer" type="text"></td>
+        <td>Capacité</td>
+        <td>
+          <div class="result" id="capacite">-</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Salaires employés</td>
+        <td><input id="salaires" type="text"></td>
+        <td>Échéance MAX</td>
+        <td>
+          <div class="result" id="echeanceMax">-</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Dépenses familiales</td>
+        <td><input id="depenses" type="text"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Échéances autres banques</td>
+        <td><input id="autresBanques" type="text"></td>
+        <td>Demande de crédit</td>
+        <td>
+          <div class="result" id="recevabilite">-</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Autres revenus</td>
+        <td><input id="autresRevenus" type="text"></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+  </section>
 
-<section class="card">
-<div class="legend"><i class="fas fa-balance-scale"></i> TEST BILAN</div>
-<table>
-<tr><td>Disponibilités en espèces</td><td><input id="dispo" type="text"></td><td>Dettes CT (encours)</td><td><input id="creditsBanque" type="text"></td></tr>
-<tr><td>Banque</td><td><input id="banque" type="text"></td><td>Dettes fournisseurs</td><td><input id="fournisseur" type="text"></td></tr>
-<tr><td>Mobile Money</td><td><input id="mobileMoney" type="text"></td><td>Fonds propre</td><td class="result" id="fondsPropre">-</td></tr>
-<tr><td>Créances</td><td><input id="creances" type="text"></td><td>Demande de crédit</td><td class="result" id="recevabiliteBilan">-</td></tr>
-<tr><td>Stock</td><td><input id="stock" type="text"></td><td></td><td></td></tr>
-<tr><td>Actif immobilisé)</td><td><input id="valorisation" type="text"></td><td></td><td></td></tr>
-</table>
-<div id="messageEligibilite" class="message-eligibilite" style="margin-top: 20px;">
-  <span id="messageTexte"></span>
-</div>
-</section>
+  <section class="card">
+    <div class="legend"><i class="fas fa-balance-scale"></i> TEST BILAN</div>
+    <table>
+      <tr>
+        <td>Disponibilités en espèces</td>
+        <td><input id="dispo" type="text"></td>
+        <td>Dettes CT (encours)</td>
+        <td><input id="creditsBanque" type="text"></td>
+      </tr>
+      <tr>
+        <td>Banque</td>
+        <td><input id="banque" type="text"></td>
+        <td>Dettes fournisseurs</td>
+        <td><input id="fournisseur" type="text"></td>
+      </tr>
+      <tr>
+        <td>Mobile Money</td>
+        <td><input id="mobileMoney" type="text"></td>
+        <td>Fonds propre</td>
+        <td>
+          <div class="result" id="fondsPropre">-</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Créances</td>
+        <td><input id="creances" type="text"></td>
+        <td>Demande de crédit</td>
+        <td>
+          <div class="result" id="recevabiliteBilan">-</div>
+        </td>
+      </tr>
+      <tr>
+        <td>Stock</td>
+        <td><input id="stock" type="text"></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Actif immobilisé)</td>
+        <td><input id="valorisation" type="text"></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <div id="messageEligibilite" class="message-eligibilite" style="margin-top: 20px;">
+      <span id="messageTexte"></span>
+    </div>
+  </section>
 
-<section class="card">
-<div class="legend"><i class="fas fa-user-tie"></i> SALARIÉ (FONCTIONNAIRES / PRIVÉS)</div>
-<table>
-<tr><td>Salaire</td><td><input id="salaire" type="text"></td><td>Échéance</td><td><input id="echeanceSalaire" type="text"></td></tr>
-<tr><td>Salaire époux(se)</td><td><input id="salaireEpoux" type="text"></td><td>Échéance</td><td><input id="echeanceEpoux" type="text"></td></tr>
-<tr><td>Quotité cessible(33.33% max)</td><td><input id="quotite" type="text"></td><td>Demande de crédit</td><td class="result" id="recevabiliteSalaire">-</td></tr>
-</table>
-<div id="messageEligibiliteSalaire" class="message-eligibilite" style="margin-top: 20px;">
-  <span id="messageTexteSalaire"></span>
-</div>
-</section>
+  <section class="card">
+    <div class="legend"><i class="fas fa-user-tie"></i> SALARIÉ (FONCTIONNAIRES / PRIVÉS)</div>
+    <table>
+      <tr>
+        <td>Salaire</td>
+        <td><input id="salaire" type="text"></td>
+        <td>Échéance</td>
+        <td><input id="echeanceSalaire" type="text"></td>
+      </tr>
+      <tr>
+        <td>Salaire époux(se)</td>
+        <td><input id="salaireEpoux" type="text"></td>
+        <td>Échéance</td>
+        <td><input id="echeanceEpoux" type="text"></td>
+      </tr>
+      <tr>
+        <td>Quotité cessible(33.33% max)</td>
+        <td><input id="quotite" type="text"></td>
+        <td>Demande de crédit</td>
+        <td>
+          <div class="result" id="recevabiliteSalaire">-</div>
+        </td>
+      </tr>
+    </table>
+    <div id="messageEligibiliteSalaire" class="message-eligibilite" style="margin-top: 20px;">
+      <span id="messageTexteSalaire"></span>
+    </div>
+  </section>
 
-<!-- Bouton Réinitialiser en bas -->
-<div style="text-align:center; margin-top:20px;">
-  <button id="resetBtn">Réinitialiser</button>
-</div>
+  <!-- Boutons d'action en bas -->
+  <div class="action-buttons">
+    <button id="resetBtn">
+      <i class="fas fa-redo"></i> Réinitialiser
+    </button>
+    <button id="exportPdfBtn">
+      <i class="fas fa-file-pdf"></i> Exporter en PDF
+    </button>
+  </div>
 
-<script>
-function parseNumber(str){ return Number(str.replace(/\s/g,'')) || 0; }
-function formatNumber(num){ return num.toLocaleString('fr-FR'); }
+  <script>
+    function parseNumber(str) { return Number(str.replace(/\s/g, '')) || 0; }
+    function formatNumber(num) { return num.toLocaleString('fr-FR'); }
 
-function formatInputValue(value) {
-  const num = parseNumber(value);
-  return num > 0 ? formatNumber(num) : '';
-}
+    function formatInputValue(value) {
+      const num = parseNumber(value);
+      return num > 0 ? formatNumber(num) : '';
+    }
 
-function calculs(){
-    // TEST CAPACITÉ - ACTIVITÉ 1
-    let venteMin1 = parseNumber(document.getElementById('venteMin1').value);
-    let venteMax1 = parseNumber(document.getElementById('venteMax1').value);
-    let jours1 = parseNumber(document.getElementById('jours1').value);
-    let achatMin1 = parseNumber(document.getElementById('achatMin1').value);
-    let achatMax1 = parseNumber(document.getElementById('achatMax1').value);
-    let freq1 = parseNumber(document.getElementById('freqAchat1').value);
+    function calculs() {
+      // TEST CAPACITÉ - ACTIVITÉ 1
+      let venteMin1 = parseNumber(document.getElementById('venteMin1').value);
+      let venteMax1 = parseNumber(document.getElementById('venteMax1').value);
+      let jours1 = parseNumber(document.getElementById('jours1').value);
+      let achatMin1 = parseNumber(document.getElementById('achatMin1').value);
+      let achatMax1 = parseNumber(document.getElementById('achatMax1').value);
+      let freq1 = parseNumber(document.getElementById('freqAchat1').value);
 
-    let venteMensuelle1 = ((venteMin1 + venteMax1)/2) * jours1;
-    let achatMensuel1 = ((achatMin1 + achatMax1)/2) * freq1;
+      let venteMensuelle1 = ((venteMin1 + venteMax1) / 2) * jours1;
+      let achatMensuel1 = ((achatMin1 + achatMax1) / 2) * freq1;
 
-    document.getElementById('venteMensuelle1').innerText = venteMensuelle1 > 0 ? formatNumber(venteMensuelle1) : '-';
-    document.getElementById('achatMensuel1').innerText = achatMensuel1 > 0 ? formatNumber(achatMensuel1) : '-';
+      document.getElementById('venteMensuelle1').innerText = venteMensuelle1 > 0 ? formatNumber(venteMensuelle1) : '-';
+      document.getElementById('achatMensuel1').innerText = achatMensuel1 > 0 ? formatNumber(achatMensuel1) : '-';
 
-    // TEST CAPACITÉ - ACTIVITÉ 2
-    let venteMin2 = parseNumber(document.getElementById('venteMin2').value);
-    let venteMax2 = parseNumber(document.getElementById('venteMax2').value);
-    let jours2 = parseNumber(document.getElementById('jours2').value);
-    let achatMin2 = parseNumber(document.getElementById('achatMin2').value);
-    let achatMax2 = parseNumber(document.getElementById('achatMax2').value);
-    let freq2 = parseNumber(document.getElementById('freqAchat2').value);
+      // TEST CAPACITÉ - ACTIVITÉ 2
+      let venteMin2 = parseNumber(document.getElementById('venteMin2').value);
+      let venteMax2 = parseNumber(document.getElementById('venteMax2').value);
+      let jours2 = parseNumber(document.getElementById('jours2').value);
+      let achatMin2 = parseNumber(document.getElementById('achatMin2').value);
+      let achatMax2 = parseNumber(document.getElementById('achatMax2').value);
+      let freq2 = parseNumber(document.getElementById('freqAchat2').value);
 
-    let venteMensuelle2 = ((venteMin2 + venteMax2)/2) * jours2;
-    let achatMensuel2 = ((achatMin2 + achatMax2)/2) * freq2;
+      let venteMensuelle2 = ((venteMin2 + venteMax2) / 2) * jours2;
+      let achatMensuel2 = ((achatMin2 + achatMax2) / 2) * freq2;
 
-    document.getElementById('venteMensuelle2').innerText = venteMensuelle2 > 0 ? formatNumber(venteMensuelle2) : '-';
-    document.getElementById('achatMensuel2').innerText = achatMensuel2 > 0 ? formatNumber(achatMensuel2) : '-';
+      document.getElementById('venteMensuelle2').innerText = venteMensuelle2 > 0 ? formatNumber(venteMensuelle2) : '-';
+      document.getElementById('achatMensuel2').innerText = achatMensuel2 > 0 ? formatNumber(achatMensuel2) : '-';
 
-    // TOTAL DES DEUX ACTIVITÉS
-    let venteMensuelleTotal = venteMensuelle1 + venteMensuelle2;
-    let achatMensuelTotal = achatMensuel1 + achatMensuel2;
+      // TOTAL DES DEUX ACTIVITÉS
+      let venteMensuelleTotal = venteMensuelle1 + venteMensuelle2;
+      let achatMensuelTotal = achatMensuel1 + achatMensuel2;
 
-    let loyer = parseNumber(document.getElementById('loyer').value);
-    let salaires = parseNumber(document.getElementById('salaires').value);
-    let depenses = parseNumber(document.getElementById('depenses').value);
-    let autresBanques = parseNumber(document.getElementById('autresBanques').value);
-    let autresRevenus = parseNumber(document.getElementById('autresRevenus').value);
+      let loyer = parseNumber(document.getElementById('loyer').value);
+      let salaires = parseNumber(document.getElementById('salaires').value);
+      let depenses = parseNumber(document.getElementById('depenses').value);
+      let autresBanques = parseNumber(document.getElementById('autresBanques').value);
+      let autresRevenus = parseNumber(document.getElementById('autresRevenus').value);
 
-    let capacite = venteMensuelleTotal - achatMensuelTotal - loyer - salaires - (0.05*venteMensuelleTotal) - depenses - autresBanques + autresRevenus;
-    let echeanceMax = capacite * 0.5;
+      let capacite = venteMensuelleTotal - achatMensuelTotal - loyer - salaires - (0.05 * venteMensuelleTotal) - depenses - autresBanques + autresRevenus;
+      let echeanceMax = capacite * 0.5;
 
-    document.getElementById('capacite').innerText = capacite > 0 ? formatNumber(capacite) : formatNumber(capacite);
-    document.getElementById('echeanceMax').innerText = echeanceMax > 0 ? formatNumber(echeanceMax) : '-';
+      document.getElementById('capacite').innerText = capacite > 0 ? formatNumber(capacite) : formatNumber(capacite);
+      document.getElementById('echeanceMax').innerText = echeanceMax > 0 ? formatNumber(echeanceMax) : '-';
 
-    let demandeCredit = echeanceMax > 100000 ? 'RECEVABLE' : 'REJET';
-    let recevElem = document.getElementById('recevabilite');
-    recevElem.innerText = demandeCredit;
-    recevElem.className = 'result ' + (demandeCredit==='RECEVABLE'?'recevable':'non-recevable');
+      let demandeCredit = echeanceMax > 100000 ? 'RECEVABLE' : 'REJET';
+      let recevElem = document.getElementById('recevabilite');
+      recevElem.innerText = demandeCredit;
+      recevElem.className = 'result ' + (demandeCredit === 'RECEVABLE' ? 'recevable' : 'non-recevable');
 
-    // TEST BILAN
-    let dispo = parseNumber(document.getElementById('dispo').value);
-    let banque = parseNumber(document.getElementById('banque').value);
-    let mobileMoney = parseNumber(document.getElementById('mobileMoney').value);
-    let creances = parseNumber(document.getElementById('creances').value);
-    let stock = parseNumber(document.getElementById('stock').value);
-    let valorisation = parseNumber(document.getElementById('valorisation').value);
-    let creditsBanque = parseNumber(document.getElementById('creditsBanque').value);
-    let fournisseur = parseNumber(document.getElementById('fournisseur').value);
+      // TEST BILAN
+      let dispo = parseNumber(document.getElementById('dispo').value);
+      let banque = parseNumber(document.getElementById('banque').value);
+      let mobileMoney = parseNumber(document.getElementById('mobileMoney').value);
+      let creances = parseNumber(document.getElementById('creances').value);
+      let stock = parseNumber(document.getElementById('stock').value);
+      let valorisation = parseNumber(document.getElementById('valorisation').value);
+      let creditsBanque = parseNumber(document.getElementById('creditsBanque').value);
+      let fournisseur = parseNumber(document.getElementById('fournisseur').value);
 
-    let fondsPropre = dispo + banque + mobileMoney + creances + stock + valorisation - creditsBanque - fournisseur;
-    document.getElementById('fondsPropre').innerText = formatNumber(fondsPropre);
-    let recevBilan = document.getElementById('recevabiliteBilan');
-    recevBilan.innerText = fondsPropre > 1000000 ? 'RECEVABLE':'REJET';
-    recevBilan.className = 'result ' + (fondsPropre>1000000?'recevable':'non-recevable');
+      let fondsPropre = dispo + banque + mobileMoney + creances + stock + valorisation - creditsBanque - fournisseur;
+      document.getElementById('fondsPropre').innerText = formatNumber(fondsPropre);
+      let recevBilan = document.getElementById('recevabiliteBilan');
+      recevBilan.innerText = fondsPropre > 1000000 ? 'RECEVABLE' : 'REJET';
+      recevBilan.className = 'result ' + (fondsPropre > 1000000 ? 'recevable' : 'non-recevable');
 
-    // SALARIÉ
-    let salaire = parseNumber(document.getElementById('salaire').value);
-    let echeanceSalaire = parseNumber(document.getElementById('echeanceSalaire').value);
-    let salaireEpoux = parseNumber(document.getElementById('salaireEpoux').value);
-    let echeanceEpoux = parseNumber(document.getElementById('echeanceEpoux').value);
+      // SALARIÉ
+      let salaire = parseNumber(document.getElementById('salaire').value);
+      let echeanceSalaire = parseNumber(document.getElementById('echeanceSalaire').value);
+      let salaireEpoux = parseNumber(document.getElementById('salaireEpoux').value);
+      let echeanceEpoux = parseNumber(document.getElementById('echeanceEpoux').value);
 
-    let quotite = (echeanceSalaire + echeanceEpoux) / (salaire + salaireEpoux) * 100;
-    document.getElementById('quotite').value = quotite > 0 ? quotite.toFixed(2) : '';
+      let quotite = (echeanceSalaire + echeanceEpoux) / (salaire + salaireEpoux) * 100;
+      document.getElementById('quotite').value = quotite > 0 ? quotite.toFixed(2) : '';
 
-    let salResult = document.getElementById('recevabiliteSalaire');
-    salResult.innerText = quotite <= 100/3 ? 'RECEVABLE':'REJET';
-    salResult.className = 'result ' + (quotite <= 100/3?'recevable':'non-recevable');
+      let salResult = document.getElementById('recevabiliteSalaire');
+      salResult.innerText = quotite <= 100 / 3 ? 'RECEVABLE' : 'REJET';
+      salResult.className = 'result ' + (quotite <= 100 / 3 ? 'recevable' : 'non-recevable');
 
-    // MESSAGE ELIGIBILITÉ SALARIÉ
-    let messageDivSalaire = document.getElementById('messageEligibiliteSalaire');
-    let messageTexteSalaire = document.getElementById('messageTexteSalaire');
-    let recevSalaire = salResult.innerText === 'RECEVABLE';
+      // MESSAGE ELIGIBILITÉ SALARIÉ
+      let messageDivSalaire = document.getElementById('messageEligibiliteSalaire');
+      let messageTexteSalaire = document.getElementById('messageTexteSalaire');
+      let recevSalaire = salResult.innerText === 'RECEVABLE';
 
-    if (salResult.innerText !== '-') {
-      if (recevSalaire) {
-        messageTexteSalaire.innerHTML = '<i class="fas fa-check-circle" style="font-size: 1.5em;"></i> Ce client peut poursuivre sa demande';
-        messageDivSalaire.className = 'message-eligibilite recevable';
-        messageDivSalaire.style.display = 'flex';
+      if (salResult.innerText !== '-') {
+        if (recevSalaire) {
+          messageTexteSalaire.innerHTML = '<i class="fas fa-check-circle" style="font-size: 1.5em;"></i> Ce client peut poursuivre sa demande';
+          messageDivSalaire.className = 'message-eligibilite recevable';
+          messageDivSalaire.style.display = 'flex';
+        } else {
+          messageTexteSalaire.innerHTML = '<svg class="warning-triangle" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> Ce client ne peut plus poursuivre sa demande';
+          messageDivSalaire.className = 'message-eligibilite non-recevable';
+          messageDivSalaire.style.display = 'flex';
+        }
       } else {
-        messageTexteSalaire.innerHTML = '<svg class="warning-triangle" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> Ce client ne peut plus poursuivre sa demande';
-        messageDivSalaire.className = 'message-eligibilite non-recevable';
-        messageDivSalaire.style.display = 'flex';
+        messageDivSalaire.style.display = 'none';
       }
-    } else {
-      messageDivSalaire.style.display = 'none';
+
+      // MESSAGE ELIGIBILITÉ
+      let messageDiv = document.getElementById('messageEligibilite');
+      let messageTexte = document.getElementById('messageTexte');
+      let recevCapacite = recevElem.innerText === 'RECEVABLE';
+      let recevBilanValue = recevBilan.innerText === 'RECEVABLE';
+
+      if (recevCapacite && recevBilanValue) {
+        messageTexte.innerHTML = '<i class="fas fa-check-circle" style="font-size: 1.5em;"></i> Ce client peut poursuivre sa demande';
+        messageDiv.className = 'message-eligibilite recevable';
+        messageDiv.style.display = 'flex';
+      } else if (!recevCapacite || !recevBilanValue) {
+        messageTexte.innerHTML = '<svg class="warning-triangle" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> Ce client ne peut plus poursuivre sa demande';
+        messageDiv.className = 'message-eligibilite non-recevable';
+        messageDiv.style.display = 'flex';
+      } else {
+        messageDiv.style.display = 'none';
+      }
     }
 
-    // MESSAGE ELIGIBILITÉ
-    let messageDiv = document.getElementById('messageEligibilite');
-    let messageTexte = document.getElementById('messageTexte');
-    let recevCapacite = recevElem.innerText === 'RECEVABLE';
-    let recevBilanValue = recevBilan.innerText === 'RECEVABLE';
+    // Format input avec séparateur de milliers au blur
+    document.querySelectorAll('input').forEach(el => {
+      el.addEventListener('blur', (e) => {
+        if (e.target.id !== 'quotite') {
+          e.target.value = formatInputValue(e.target.value);
+        }
+      });
+      el.addEventListener('input', calculs);
+    });
 
-    if (recevCapacite && recevBilanValue) {
-      messageTexte.innerHTML = '<i class="fas fa-check-circle" style="font-size: 1.5em;"></i> Ce client peut poursuivre sa demande';
-      messageDiv.className = 'message-eligibilite recevable';
-      messageDiv.style.display = 'flex';
-    } else if (!recevCapacite || !recevBilanValue) {
-      messageTexte.innerHTML = '<svg class="warning-triangle" viewBox="0 0 24 24" style="fill: currentColor;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> Ce client ne peut plus poursuivre sa demande';
-      messageDiv.className = 'message-eligibilite non-recevable';
-      messageDiv.style.display = 'flex';
-    } else {
-      messageDiv.style.display = 'none';
-    }
-}
+    document.addEventListener('DOMContentLoaded', calculs);
 
-// Format input avec séparateur de milliers au blur
-document.querySelectorAll('input').forEach(el => {
-  el.addEventListener('blur', (e) => {
-    if (e.target.id !== 'quotite') {
-      e.target.value = formatInputValue(e.target.value);
-    }
-  });
-  el.addEventListener('input', calculs);
-});
+    // Bouton Réinitialiser : vide tous les champs et résultats
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.querySelectorAll('input').forEach(el => el.value = '');
+      document.querySelectorAll('.result').forEach(el => el.innerText = '-');
+      document.getElementById('messageEligibilite').style.display = 'none';
+      document.getElementById('messageEligibiliteSalaire').style.display = 'none';
+    });
 
-document.addEventListener('DOMContentLoaded', calculs);
+    // Toggle Activité 2
+    let isActivite2Visible = true;
+    document.getElementById('toggleActivite2').addEventListener('click', () => {
+      const table = document.getElementById('tableActivite2');
+      const btn = document.getElementById('toggleActivite2');
+      isActivite2Visible = !isActivite2Visible;
 
-// Bouton Réinitialiser : vide tous les champs et résultats
-document.getElementById('resetBtn').addEventListener('click', () => {
-    document.querySelectorAll('input').forEach(el => el.value = '');
-    document.querySelectorAll('.result').forEach(el => el.innerText = '-');
-    document.getElementById('messageEligibilite').style.display = 'none';
-});
+      if (isActivite2Visible) {
+        table.style.display = 'table';
+        btn.innerHTML = '<i class="fas fa-eye"></i> Masquer';
+      } else {
+        table.style.display = 'none';
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i> Afficher';
+      }
+    });
 
-// Toggle Activité 2
-let isActivite2Visible = true;
-document.getElementById('toggleActivite2').addEventListener('click', () => {
-  const table = document.getElementById('tableActivite2');
-  const btn = document.getElementById('toggleActivite2');
-  isActivite2Visible = !isActivite2Visible;
-  
-  if (isActivite2Visible) {
-    table.style.display = 'table';
-    btn.innerHTML = '<i class="fas fa-eye"></i> Masquer';
-  } else {
-    table.style.display = 'none';
-    btn.innerHTML = '<i class="fas fa-eye-slash"></i> Afficher';
-  }
-});
-</script>
+    // Fonction d'export PDF avec support multi-page amélioré
+    document.getElementById('exportPdfBtn').addEventListener('click', async function () {
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const exportBtn = document.getElementById('exportPdfBtn');
+      const actionButtons = document.querySelector('.action-buttons');
+
+      const originalBtnText = exportBtn.innerHTML;
+      exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+      exportBtn.disabled = true;
+      loadingOverlay.style.display = 'flex';
+
+      // Petit délai pour laisser le spinner s'afficher
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      try {
+        // Masquer les boutons et le voile sombre pour la capture
+        actionButtons.style.visibility = 'hidden';
+
+        // Supprimer temporairement le voile sombre (body::before)
+        const style = document.createElement('style');
+        style.id = 'temp-pdf-style';
+        style.innerHTML = 'body::before { display: none !important; }';
+        document.head.appendChild(style);
+
+        // Sauvegarder et supprimer temporairement le fond
+        const originalBackground = document.body.style.backgroundImage;
+        document.body.style.backgroundImage = 'none';
+        document.body.style.backgroundColor = '#ffffff';
+
+        // S'assurer qu'on capture depuis le haut
+        const scrollX = window.scrollX;
+        const scrollY = window.scrollY;
+        window.scrollTo(0, 0);
+
+        const canvas = await html2canvas(document.body, {
+          scale: 2, // Augmenter la résolution pour plus de netteté
+          useCORS: true,
+          logging: false,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          width: document.documentElement.scrollWidth,
+          height: document.documentElement.scrollHeight,
+          windowWidth: document.documentElement.clientWidth,
+          windowHeight: document.documentElement.clientHeight,
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0,
+          ignoreElements: (element) => {
+            return element.id === 'loadingOverlay' || element.classList.contains('action-buttons');
+          }
+        });
+
+        // Restaurer l'état original
+        document.getElementById('temp-pdf-style').remove();
+        document.body.style.backgroundImage = originalBackground;
+        window.scrollTo(scrollX, scrollY);
+        actionButtons.style.visibility = 'visible';
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        const imgHeightInPdf = (canvasHeight * pdfWidth) / canvasWidth;
+
+        let heightLeft = imgHeightInPdf;
+        let position = 0;
+
+        // Première page
+        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInPdf, undefined, 'FAST');
+        heightLeft -= pdfHeight;
+
+        // Pages supplémentaires si nécessaire
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeightInPdf;
+          pdf.addPage();
+          pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInPdf, undefined, 'FAST');
+          heightLeft -= pdfHeight;
+        }
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('fr-FR');
+        const timeStr = now.toLocaleTimeString('fr-FR').replace(/:/g, '-');
+
+        // Pied de page sur toutes les pages si possible, ou au moins la dernière
+        const totalPages = pdf.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+          pdf.setPage(i);
+          pdf.setFontSize(8);
+          pdf.setTextColor(150);
+          pdf.text(`Exporté le ${dateStr} à ${now.toLocaleTimeString('fr-FR')} - Page ${i}/${totalPages}`, 10, pdfHeight - 10);
+        }
+
+        pdf.save(`Filtre_Credit_${dateStr.replace(/\//g, '-')}_${timeStr}.pdf`);
+
+      } catch (error) {
+        console.error('Erreur PDF:', error);
+        alert('Erreur lors de la génération du PDF. Consultez la console pour plus de détails.');
+      } finally {
+        actionButtons.style.visibility = 'visible';
+        loadingOverlay.style.display = 'none';
+        exportBtn.innerHTML = originalBtnText;
+        exportBtn.disabled = false;
+      }
+    });
+  </script>
 
 </body>
+
 </html>
